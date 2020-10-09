@@ -1,13 +1,13 @@
 package Test.dir1;
 
-import Library.SampleLib01;
+//import Library.SampleLib01;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class Scenario1A {
 
-    SampleLib01 test;
+//    SampleLib01 test;
 
     @Given("memberikan fitur SatuA - NolSatu")
     public void memberikan_fitur_SatuA_NolSatu() {
