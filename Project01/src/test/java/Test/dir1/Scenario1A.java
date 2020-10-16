@@ -10,10 +10,9 @@ public class Scenario1A {
 //    SampleLib01 test;
 
     @Given("memberikan fitur SatuA - NolSatu")
-    public void memberikan_fitur_SatuA_NolSatu() {
+    public void memberikan_fitur_SatuA_NolSatu() throws InterruptedException {
 //        System.out.println("memberikan fitur SatuA - NolSatu");
-
-        
+        Thread.sleep(300000);
     }
 
     @When("ketika fitur SatuA - NolSatu")
