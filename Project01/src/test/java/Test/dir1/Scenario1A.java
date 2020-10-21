@@ -11,7 +11,7 @@ public class Scenario1A {
 
     @Given("memberikan fitur SatuA - NolSatu")
     public void memberikan_fitur_SatuA_NolSatu() throws InterruptedException {
-//        System.out.println("memberikan fitur SatuA - NolSatu");asdasdasdasdadasd
+//        System.out.println("memberikan fitur SatuA - NolSatu");asdasdasdasdadasdjhajkhdjahsjdhakh
 //        Thread.sleep(300000);
     }
 
