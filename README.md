@@ -1,5 +1,4 @@
 # QCR Parent Project
 
 
-awdx
-adasdasdasd
+readme parrent
