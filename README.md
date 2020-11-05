@@ -2,3 +2,5 @@
 
 
 readme parrent
+
+penambahan dibagian readme parrent

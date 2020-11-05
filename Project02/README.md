@@ -1,4 +1,4 @@
 # QCR Project 2
 
 
-ini readme
+ini readme project 02
