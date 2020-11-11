@@ -1,0 +1,157 @@
+def manualBuild = false
+def buildAll = false
+def affectedModules = []
+def affectedList
+def moduleName = "Project01"
+
+pipeline {
+    agent any
+    options {
+        disableConcurrentBuilds()
+    }
+    // environment {
+    //     GIT_BRANCH = "${sh(script:'git name-rev --name-only HEAD', returnStdout: true)}"
+    // }
+
+    stages {
+
+        // stage("Env Variables") {
+        //     steps {
+
+        //         echo "Branch Name= ${env.GIT_BRANCH}"
+        //         echo "Build Number = ${env.BUILD_NUMBER}"
+        //         sh "printenv"
+        //     }
+        // }
+
+    	//stage('clone'){
+        //	steps {
+        //  		git branch: 'master', credentialsId: '70444eac-f6ee-4a32-8f53-adcbd741a4b3', url: 'https://github.com/SatrioAjieWijaya/monoprojectpilot.git'
+        //	}
+      	//}
+
+      	stage('get different'){
+      		steps{
+      			script{
+      				def changes = [];
+
+      				if(currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause').size() > 0){
+      					manualBuild = true
+      					echo "Manual Build Trigger"
+      				}else{
+      					def changeLogSets = currentBuild.changeSets
+      					for (int i = 0; i < changeLogSets.size(); i++) {
+                    		def entries = changeLogSets[i].items
+                    		for (int j = 0; j < entries.length; j++) {
+                      			def entry = entries[j]
+                      			def files = new ArrayList(entry.affectedFiles)
+                      			for (int k = 0; k < files.size(); k++) {
+                        			def file = files[k]
+                        			changes.add(file.path)
+                      			}
+                    		}
+                  		}
+
+                  		//iterate through changes
+                		changes.find {c ->
+                			if(c.contains("/")) {
+                				echo "module " + c
+								if(c.indexOf("/") > 1){
+									affectedModules.add(c.substring(0,c.indexOf("/")))
+									return false
+                				}
+							}else{
+								echo "parent " + c
+								affectedModules = []
+								buildAll = true
+								return true
+							}
+                		}
+
+      				}
+      			}
+      		}
+      	}
+
+
+      	stage('run modules'){
+      		when{
+      			expression{
+      				return manualBuild || affectedModules.unique().join(",").contains(moduleName)
+      			}
+      		}
+      		steps {
+      			script{
+	      			if (manualBuild){
+	      				echo "Running manual build"
+	      			}else{
+	      				echo "Running build by push event"
+	      			}
+      			}
+
+	          	echo "Running ${moduleName}"
+	          	withMaven(jdk: 'JAVA_HOME', maven: 'MAVEN_HOME') {
+	            	sh "mvn -pl ${moduleName} clean verify"
+	          	}
+	        }
+	        post {
+	        	always {
+	        		//tuchidyes handling
+	        		//cucumber report handling
+	        		//tm4j handling
+	        		echo "post build - run modules"
+	        		publishHTML([
+	        			allowMissing: true,
+	        			alwaysLinkToLastBuild: true,
+	        			keepAll: true,
+	        			reportDir: 'Project02/target/site/serenity/',
+	        			reportFiles: 'index.html',
+	        			reportName: 'HTML Report',
+	        			reportTitles: ''
+        			])
+
+        			cucumber failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/*.json', jsonReportDirectory: 'Project02/target/cucumber-parallel/', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+	        	}
+	        }
+      	}
+
+
+      	stage('parrent changes run'){
+      		when{
+      			expression{
+      				return buildAll
+      			}
+      		}
+      		steps {
+	          	echo "Change in Parrent : Running ${moduleName}"
+	          	withMaven(jdk: 'JAVA_HOME', maven: 'MAVEN_HOME') {
+	            	sh "mvn -pl ${moduleName} clean verify"
+	          	}
+	        }
+	        post {
+	        	always {
+	        		//tuchidyes handling
+	        		//cucumber report handling
+	        		//tm4j handling
+	        		echo "post build - parrent changes run"
+	        		publishHTML([
+	        			allowMissing: true,
+	        			alwaysLinkToLastBuild: true,
+	        			keepAll: true,
+	        			reportDir: 'Project02/target/site/serenity/',
+	        			reportFiles: 'index.html',
+	        			reportName: 'HTML Report',
+	        			reportTitles: ''
+        			])
+
+        			cucumber failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/*.json', jsonReportDirectory: 'Project02/target/cucumber-parallel/', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+	        	}
+	        }
+      	}
+
+
+    }
+
+}
