@@ -2,7 +2,7 @@ def manualBuild = false
 def buildAll = false
 def affectedModules = []
 def affectedList
-def moduleName = "Project01"
+def moduleName = "Project02"
 
 pipeline {
     agent any
