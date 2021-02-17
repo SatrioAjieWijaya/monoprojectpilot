@@ -12,6 +12,7 @@
     <modules>
         <module>Project01</module>
         <module>Project02</module>
+        <module>Project</module>
     </modules>
 
     <properties>
