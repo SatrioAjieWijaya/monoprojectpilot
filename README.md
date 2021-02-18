@@ -7,5 +7,3 @@ penambahan dibagian readme parrent
 percobaan PR
 
 perubhan di paarent
-
-perubahan parrent
