@@ -1,7 +1,1 @@
 # QCR Project
-
-
-
-
-
-
