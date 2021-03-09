@@ -1,6 +1,8 @@
 # QCR Parent Project
 
 
+hai
+
 readme parrent
 
 penambahan dibagian readme parrent
