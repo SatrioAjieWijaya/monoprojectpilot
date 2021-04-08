@@ -1,0 +1,14 @@
+name: simulasi manual
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: check the source branch name
+        run:
+          echo the branch name is feature/bpa001 | cut -d'/' -f 2
+    
