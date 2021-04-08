@@ -11,5 +11,5 @@ jobs:
       - name: set environment variable
         run: 
           echo "action_state=feature/bpa001 | cut -d'/' -f 2" >> $GITHUB_ENV
-      
+          echo "${{ env.action_state }}"
     
