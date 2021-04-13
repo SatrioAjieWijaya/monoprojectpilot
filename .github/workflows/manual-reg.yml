@@ -9,9 +9,9 @@ on:
 
 env:
   # Repository of regression test in format <organization>/<repository>.
-  REPOSITORY: ""
+  REPOSITORY: "SatrioAjieWijaya/monoprojectpilot"
   # Maven project under monorepo of regression test.
-  PROJECT: ""
+  PROJECT: "Project"
   TICKET: "${{ github.event.inputs.key }}"
   STG_ENV: "https://${{ github.event.inputs.key }}.example.com"
 
