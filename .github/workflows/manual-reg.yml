@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: tampilkan env 
+        run: 
+          printenv
       - name: Check if variable is empty
         run: |
           if [ -z "${REPOSITORY}" ]; then
