@@ -1,4 +1,4 @@
-name: "Post-Integration: Regression Test"
+name: "Post-Integration: Manual Regression Test"
 
 on:
   workflow_dispatch:
