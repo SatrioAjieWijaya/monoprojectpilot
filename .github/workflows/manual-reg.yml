@@ -1,0 +1,88 @@
+name: "Post-Integration: Regression Test"
+
+on:
+  workflow_dispatch:
+    inputs:
+      key:
+        required: true
+        description: 'The JIRA Issue Key'
+
+env:
+  # Repository of regression test in format <organization>/<repository>.
+  REPOSITORY: ""
+  # Maven project under monorepo of regression test.
+  PROJECT: ""
+  TICKET: "${{ github.event.inputs.key }}"
+  STG_ENV: "https://${{ github.event.inputs.key }}.example.com"
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Check if variable is empty
+        run: |
+          if [ -z "${REPOSITORY}" ]; then
+            echo "::error::'REPOSITORY' environment variable must be set"
+            exit 1
+          fi
+          if [ -z "${PROJECT}" ]; then
+            echo "::error::'PROJECT' environment variable must be set"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ env.REPOSITORY }}
+          ref: master
+          token: ${{ secrets.REGRESSION_PAT }}
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('pom.xml', '${{ env.PROJECT }}/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      # Set report portal parameters environment variables
+      # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable
+      - name: Set Report Portal Parameters
+        run: |
+          NOW=$(date +%d%m%Y)
+          echo "rp.description='Regression ${NOW} - Github Action #${GITHUB_RUN_NUMBER}'" >> $GITHUB_ENV
+          echo "rp.attributes=release:${NOW}" >> $GITHUB_ENV
+
+      - name: Run Regression
+        run: mvn -pl ${PROJECT} verify -q -Dwebdriver.base.url=${STG_ENV}
+        env:
+          rp.endpoint: ${{ secrets.RP_ENDPOINT }}
+          rp.api.key: ${{ secrets.RP_API_KEY }}
+
+      # Optional. It will take some artifact storage quota.
+      # Disable if dont needed.
+      - name: Uploading Result Data
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: Result
+          path: ${{ env.PROJECT }}/target/site
+
+      # Need Zephyr Scale Key preconfigured.
+      - name: Sending Result to Zephyr Scale
+        if: ${{ success() || failure() }}
+        env:
+          ZEPHYR_API_KEY: ${{ secrets.TM4J_KEY }}
+          PROJECT_KEY: ABCD
+          JSON_PATH: ${{ env.PROJECT }}/target/cucumber-parallel/*.json
+        run: |
+          zip result.zip $JSON_PATH
+          curl --request POST \
+              --url "https://api.adaptavist.io/tm4j/v2/automations/executions/cucumber?projectKey=$PROJECT_KEY&autoCreateTestCases=false" \
+              --header "Authorization: Bearer $ZEPHYR_API_KEY" \
+              --header 'content-type: multipart/form-data' \
+              --form "file=@result.zip;type=application/x-zip-compressed"
