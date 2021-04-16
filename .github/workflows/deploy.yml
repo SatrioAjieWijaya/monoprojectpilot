@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-20.04
     
     steps:
-      - name: Check if variable is empty
+      - name: print semua env variable 
         run: |
           printenv
