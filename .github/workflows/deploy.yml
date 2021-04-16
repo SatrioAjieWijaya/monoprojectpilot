@@ -1,0 +1,17 @@
+name: "Post-Integration: Prerelease"
+
+on: 
+  workflow_dispatch:
+
+env:
+  # Repository of regression test in format <organization>/<repository>.
+  REPOSITORY: "sepulsa/sepulsa01"
+  
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Check if variable is empty
+        run: |
+          printenv
