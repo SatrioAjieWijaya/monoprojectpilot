@@ -19,18 +19,20 @@ jobs:
         run: |
           id=$(echo feature/bpa001 | cut -d '/' -f2)
           echo "::set-output name=id::$id"
-      - run: echo "${{steps.get-id.outputs.id}}"
+      - run: |
+          echo "${{steps.get-id.outputs.id}}"
+          echo "${github.event_name}"
           
-      - name: Set the value
-        id: step_one
-        run: |
-            echo "action_state=${{steps.get-id.outputs.id}}" >> $GITHUB_ENV
-      - name: Use the value
-        id: step_two
-        run: |
-            echo "${{ env.action_state }}" # This will output 'yellow'
-      - name: print environmnet variable 
-        id: print-env
+#       - name: Set the value
+#         id: step_one
+#         run: |
+#             echo "action_state=${{steps.get-id.outputs.id}}" >> $GITHUB_ENV
+#       - name: Use the value
+#         id: step_two
+#         run: |
+#             echo "${{ env.action_state }}" # This will output 'yellow'
+#       - name: print environmnet variable 
+#         id: print-env
         run:
           printenv
     
