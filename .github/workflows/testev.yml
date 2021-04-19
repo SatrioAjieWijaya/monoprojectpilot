@@ -33,6 +33,6 @@ jobs:
 #             echo "${{ env.action_state }}" # This will output 'yellow'
 #       - name: print environmnet variable 
 #         id: print-env
-        run:
-          printenv
+#        run:
+#          printenv
     
