@@ -8,10 +8,20 @@ env:
   REPOSITORY: "sepulsa/sepulsa01"
   
 jobs:
-  test:
+  test1:
     runs-on: ubuntu-20.04
     
     steps:
-      - name: print semua env variable 
+      - name: print semua env variable 1
         run: |
+          echo "job test 1"
+          printenv
+          
+  test2:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: print semua env variable 2
+        run: |
+          echo "job test 2"
           printenv
