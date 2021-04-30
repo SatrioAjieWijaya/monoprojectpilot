@@ -23,6 +23,6 @@ jobs:
     steps:
       - name: print semua env variable 2
         run: |
-          echo "${env.REPOSITORY}"
+          echo "${{ env.REPOSITORY }}"
           echo "job test 2"
           printenv
