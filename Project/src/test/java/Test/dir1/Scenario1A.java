@@ -4,15 +4,20 @@ package Test.dir1;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.pages.PageObject;
 
-public class Scenario1A {
+public class Scenario1A extends PageObject {
 
 //    SampleLib01 test;
 
     @Given("memberikan fitur SatuA - NolSatu")
     public void memberikan_fitur_SatuA_NolSatu() throws InterruptedException {
-//        System.out.println("memberikan fitur SatuA - NolSatu");  awdxxxasxasdasdas
-//        Thread.sleep(300000);
+        System.out.println("memberikan fitur SatuA - NolSatu");
+//        System.out.println("endpointURL = "+endpointUrl);
+        super.open();
+
+
+        Thread.sleep(300000);
     }
 
     @When("ketika fitur SatuA - NolSatu")
