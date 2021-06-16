@@ -8,5 +8,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: initiate acess aws
+        run: pwd
       - name: initiate kubectl
         run: kubectl
