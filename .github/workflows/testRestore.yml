@@ -1,4 +1,4 @@
-name: Restore Archive
+name: "Restore Archive"
 
 on: 
   workflow_dispatch
