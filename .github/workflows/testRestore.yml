@@ -11,3 +11,5 @@ jobs:
         run: pwd
       - name: initiate kubectl
         run: kubectl
+      - name: restore initial db 
+        run: mongorestore --help
