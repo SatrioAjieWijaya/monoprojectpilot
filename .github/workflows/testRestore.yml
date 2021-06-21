@@ -27,4 +27,4 @@ jobs:
       - name: Restore DB Archive
         run: |
           aws s3 cp s3://alterra-proteuscore-mongodump/proteuscore.archive .
-          mongorestore --port=27018 --archive=proteuscore.archive
+          mongorestore --port=27018 --username=${{ secrets.DB_USERNAME }} --password=${{ secrets.DB_PASS }} --archive=proteuscore.archive
