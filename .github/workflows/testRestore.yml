@@ -18,7 +18,7 @@ jobs:
       - name: Prepare Kubeconfig
         env:
           K8S_CLUSTER: "archipelagostaging"
-          K8S_CONTEXT: "archipelagostaging"
+          K8S_CONTEXT: "arn:aws:eks:ap-southeast-1:267475692844:cluster/archipelagostaging"
         run: |
           aws eks update-kubeconfig --name ${K8S_CLUSTER}
           kubectl config current-context
