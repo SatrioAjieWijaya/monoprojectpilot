@@ -18,11 +18,8 @@ jobs:
       - name: Prepare Kubeconfig
         env:
           K8S_CLUSTER: "archipelagostaging"
-          K8S_CONTEXT: "arn:aws:eks:ap-southeast-1:267475692844:cluster/archipelagostaging"
         run: |
           aws eks update-kubeconfig --name ${K8S_CLUSTER}
-          kubectl config current-context
-          kubectl config use-context ${K8S_CONTEXT}
           kubectl -n serpul port-forward svc/mongodb-replica-set-svc 27017:27017 &
       - name: Restore DB Archive
         run: |
