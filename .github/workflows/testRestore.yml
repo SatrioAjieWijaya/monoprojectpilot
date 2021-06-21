@@ -23,8 +23,8 @@ jobs:
           aws eks update-kubeconfig --name ${K8S_CLUSTER}
           kubectl config current-context
           kubectl config use-context ${K8S_CONTEXT}
-          kubectl -n serpul port-forward svc/mongodb-replica-set-svc 27018:27017 &
+          kubectl -n serpul port-forward svc/mongodb-replica-set-svc 27017:27017 &
       - name: Restore DB Archive
         run: |
           aws s3 cp s3://alterra-proteuscore-mongodump/proteuscore.archive .
-          mongorestore --port=27018 --username=${{ secrets.DB_USERNAME }} --password=${{ secrets.DB_PASS }} --archive=proteuscore.archive
+          mongorestore --username=${{ secrets.DB_USERNAME }} --password=${{ secrets.DB_PASS }} --archive=proteuscore.archive
