@@ -9,6 +9,8 @@ jobs:
     env:
       dbType: ""
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -22,6 +24,10 @@ jobs:
           aws eks update-kubeconfig --name ${K8S_CLUSTER}
           kubectl -n serpul port-forward svc/mongodb-replica-set-svc 27017:27017 &
       - name: Restore DB Archive
+        env: 
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASS }}
         run: |
           aws s3 cp s3://alterra-proteuscore-mongodump/proteuscore.archive .
           mongorestore --username=${{ secrets.DB_USERNAME }} --password=${{ secrets.DB_PASS }} --archive=proteuscore.archive --drop
+          sh db/script/import_mongo.sh db/proteus-core/mongo
